@@ -1,0 +1,127 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  /* Colors from user's design snippet */
+  --color-primary: #e1fdff;
+  --color-surface-container: #1a1f2e;
+  --color-secondary-container: #ce5dff;
+  --color-on-background: #dde2f6;
+  --color-inverse-on-surface: #2b3040;
+  --color-outline: #849495;
+  --color-on-primary-container: #006a71;
+  --color-surface-dim: #0d1321;
+  --color-inverse-surface: #dde2f6;
+  --color-surface-container-high: #242a39;
+  --color-surface-container-lowest: #080e1c;
+  --color-background: #0d1321;
+  --color-on-tertiary-fixed-variant: #0035be;
+  --color-on-primary: #00363a;
+  --color-surface-bright: #333949;
+  --color-on-secondary: #520071;
+  --color-on-error: #690005;
+  --color-outline-variant: #3a494b;
+  --color-primary-fixed: #74f5ff;
+  --color-tertiary-fixed: #dde1ff;
+  --color-on-surface-variant: #b9cacb;
+  --color-surface: #0d1321;
+  --color-inverse-primary: #00696f;
+  --color-surface-container-highest: #2f3444;
+  --color-secondary-fixed: #f8d8ff;
+  --color-primary-fixed-dim: #00dbe7;
+  --color-on-tertiary: #002388;
+  --color-surface-container-low: #161b2a;
+  --color-tertiary: #f8f6ff;
+  --color-surface-variant: #2f3444;
+  --color-on-secondary-container: #480064;
+  --color-primary-container: #00f2ff;
+  --color-error: #ffb4ab;
+  --color-secondary: #ebb2ff;
+  --color-error-container: #93000a;
+  --color-on-primary-fixed: #002022;
+  --color-on-primary-fixed-variant: #004f54;
+  --color-tertiary-container: #d3d9ff;
+  --color-on-surface: #dde2f6;
+  --color-on-secondary-fixed: #320047;
+  --color-surface-tint: #00dbe7;
+  --color-on-tertiary-container: #154bf1;
+  --color-on-error-container: #ffdad6;
+  --color-on-tertiary-fixed: #001356;
+  --color-on-secondary-fixed-variant: #74009f;
+  --color-secondary-fixed-dim: #ebb2ff;
+  --color-tertiary-fixed-dim: #b8c3ff;
+
+  --color-sidebar: #0a0f1a;
+  --color-accent: #00f2ff;
+  --color-chart-line: #00dbe7;
+  --color-chart-fill: rgba(0, 219, 231, 0.1);
+
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Space Grotesk", sans-serif;
+
+  --radius-default: 0.125rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .aurora-gradient {
+    background: linear-gradient(135deg, #00f2ff 0%, #ce5dff 100%);
+  }
+  .glass-card {
+    background: rgba(26, 31, 46, 0.4);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .glass-card-hover:hover {
+    background: rgba(26, 31, 46, 0.6);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.05);
+  }
+  .sidebar-gradient {
+    background: linear-gradient(180deg, #0a0f1a 0%, #0d1321 100%);
+  }
+  .neon-glow {
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+  }
+  .ambient-glow {
+    box-shadow: 0 0 40px rgba(0, 242, 255, 0.08);
+  }
+  .text-glow:hover {
+    text-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
