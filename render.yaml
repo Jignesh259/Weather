@@ -22,11 +22,12 @@ services:
     name: weather-frontend
     runtime: node
     buildCommand: "cd WeatherForeCase && npm install && npm run build"
-    publishPath: "WeatherForeCase/dist"
+    publishPath: "./WeatherForeCase/dist"
     envVars:
       - key: VITE_API_URL
         fromService:
           type: web
           name: weather-backend
-          property: host
+          property: url
         suffix: "/api"
+
