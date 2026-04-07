@@ -7,6 +7,7 @@ import WeatherHeroCard from '../components/dashboard/WeatherHeroCard';
 import AQIWidget from '../components/dashboard/AQIWidget';
 import WeatherCharts from '../components/dashboard/WeatherCharts';
 import ForecastGrid from '../components/dashboard/ForecastGrid';
+import CitySelectorList from '../components/dashboard/CitySelectorList';
 import { getCities, getPredictions, getAQILive } from '../api';
 import type { HourlyData, AQIReading } from '../types/weather';
 
@@ -15,12 +16,11 @@ interface DashboardPageProps {
 }
 
 const GUJARAT_DISTRICTS = [
-  'Ahmedabad', 'Amreli', 'Anand', 'Aravalli', 'Banaskantha', 'Bharuch',
-  'Bhavnagar', 'Botad', 'Chhota Udepur', 'Dahod', 'Dang', 'Devbhoomi Dwarka',
-  'Gandhinagar', 'Gir Somnath', 'Jamnagar', 'Junagadh', 'Kheda', 'Kutch',
-  'Mahisagar', 'Mehsana', 'Morbi', 'Narmada', 'Navsari', 'Panchmahal',
-  'Patan', 'Porbandar', 'Rajkot', 'Sabarkantha', 'Surat', 'Surendranagar',
-  'Tapi', 'Vadodara', 'Valsad'
+  'Ahmedabad', 'Amreli', 'Anand', 'Banaskantha', 'Bharuch', 'Bhavnagar', 'Bhuj',
+  'Chhota Udaipur', 'Dahod', 'Daman', 'Dwarka', 'Gandhinagar', 'Godhra', 'Gondal',
+  'Himatnagar', 'Jamnagar', 'Junagadh', 'Mehsana', 'Morbi', 'Nadiad', 'Nargol',
+  'Navsari', 'Palanpur', 'Patan', 'Porbandar', 'Rajkot', 'Savarkundla', 'Surat',
+  'Surendranagar', 'Upleta', 'Vadodara', 'Valsad', 'Vapi', 'Veraval', 'Wankaner'
 ];
 
 const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
@@ -28,6 +28,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
   const [selectedCity, setSelectedCity] = useState('Ahmedabad');
   const [predictions, setPredictions] = useState<HourlyData[]>([]);
   const [aqi, setAqi] = useState<AQIReading | null>(null);
+  const [allAQI, setAllAQI] = useState<AQIReading[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -42,8 +43,12 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
       setPredictions(predRes.predictions);
       setAqi(aqiRes as AQIReading);
       setError(null);
-    } catch (err) {
-      setError("Failed to fetch weather data. Is the backend running?");
+    } catch (err: any) {
+      if (err.response?.status === 503) {
+        setError(err.response.data.detail || "Service is still initializing models. Please wait a moment...");
+      } else {
+        setError("Failed to fetch weather data. Is the backend running?");
+      }
     } finally {
       setLoading(false);
     }
@@ -52,8 +57,14 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const cityList = await getCities();
+        const [cityList, aqiData] = await Promise.all([
+          getCities(),
+          getAQILive()
+        ]);
         setCities(cityList);
+        if (aqiData && 'readings' in aqiData) {
+          setAllAQI(aqiData.readings);
+        }
         await fetchData(selectedCity);
       } catch (err) {
         setError("Could not connect to backend.");
@@ -141,33 +152,55 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
         );
       case 'precipitation':
         return (
-          <Box className="glass-card" sx={{ p: 6, borderRadius: '32px', textAlign: 'center' }}>
-            <Typography variant="h4" sx={{ color: '#00f2ff', mb: 2 }}>Precipitation Analysis</Typography>
-            <Typography sx={{ opacity: 0.6 }}>Detailed rainfall and humidity metrics for {selectedCity} will appear here.</Typography>
-            <WeatherCharts data={predictions} />
-          </Box>
+          <WeatherCharts 
+            data={predictions} 
+            dataKey="humidity" 
+            color="#00f2ff" 
+            unit="%" 
+            loading={loading}
+          />
         );
       case 'wind':
         return (
-          <Box className="glass-card" sx={{ p: 6, borderRadius: '32px', textAlign: 'center' }}>
-            <Typography variant="h4" sx={{ color: '#00f2ff', mb: 2 }}>Wind Distribution</Typography>
-            <Typography sx={{ opacity: 0.6 }}>Wind speed patterns and direction vectors for {selectedCity}.</Typography>
-            <WeatherHeroCard data={predictions[0]} city={selectedCity} />
-          </Box>
+          <WeatherCharts 
+            data={predictions} 
+            dataKey="wind_speed" 
+            color="#fff" 
+            unit=" km/h" 
+            loading={loading}
+          />
         );
       case 'aqi':
         return (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <AQIWidget data={aqi} />
-          </Box>
+          <WeatherCharts 
+            data={predictions} 
+            dataKey="aqi" 
+            color="#ce5dff" 
+            unit=" AQI" 
+            loading={loading}
+          />
         );
-      case 'stats':
-        return (
-          <Box className="glass-card" sx={{ p: 6, borderRadius: '32px' }}>
-            <Typography variant="h4" sx={{ color: '#00f2ff', mb: 4 }}>Historical Statistics</Typography>
-            <WeatherCharts data={predictions} />
-          </Box>
-        );
+    case 'stats':
+      return (
+        <WeatherCharts 
+          data={predictions} 
+          dataKey="temperature" 
+          color="#00f2ff" 
+          loading={loading}
+        />
+      );
+    case 'cities':
+      return (
+        <CitySelectorList 
+          cities={cities} 
+          allAQI={allAQI} 
+          selectedCity={selectedCity}
+          onSelect={(city) => {
+            setSelectedCity(city);
+            setActiveTab('dashboard');
+          }}
+        />
+      );
       default:
         return null;
     }
@@ -183,23 +216,23 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
         component="main"
         sx={{
           flexGrow: 1,
-          ml: '80px', // Matches sidebar width
+          ml: { xs: 0, sm: '80px' }, // Dynamic margin
+          mb: { xs: '70px', sm: 0 }, // Room for bottom bar on mobile
           height: '100vh',
           overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
-          position: 'relative'
+          position: 'relative',
+          transition: 'all 0.3s ease'
         }}
       >
         <TopBar
           selectedCity={selectedCity}
-          cities={cities}
-          onCityChange={(city) => setSelectedCity(city)}
         />
 
         <Box
           sx={{
-            p: 4,
+            p: { xs: 2.5, sm: 4 }, // Responsive padding
             flexGrow: 1,
             position: 'relative',
             zIndex: 1,
@@ -208,18 +241,17 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
               content: '""',
               position: 'fixed',
               top: 0,
-              left: '80px',
+              left: { xs: 0, sm: '80px' }, // Responsive position
               right: 0,
               bottom: 0,
               backgroundImage: 'url("https://images.unsplash.com/photo-1534088568595-a066f710b721?q=80&w=2560&auto=format&fit=crop")',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundAttachment: 'fixed',
-              opacity: 0.15, // Subtle background integration
+              opacity: 0.15,
               filter: 'grayscale(0.5) contrast(1.2)',
               zIndex: -1,
             },
-            // Dark Gradient Overlay for Readability
             background: 'linear-gradient(180deg, rgba(13, 19, 33, 0.8) 0%, rgba(13, 19, 33, 0.95) 100%)',
           }}
         >

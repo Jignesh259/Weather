@@ -12,7 +12,7 @@ interface WeatherHeroCardProps {
   city: string;
 }
 
-const WeatherHeroCard: React.FC<WeatherHeroCardProps> = ({ data, city }) => {
+const WeatherHeroCard: React.FC<WeatherHeroCardProps> = ({ data }) => {
   if (!data) return null;
 
   const getCondition = (hum: number) => {
@@ -31,7 +31,7 @@ const WeatherHeroCard: React.FC<WeatherHeroCardProps> = ({ data, city }) => {
       className="glass-card"
       style={{
         borderRadius: '24px',
-        padding: '32px',
+        padding: window.innerWidth < 640 ? '20px' : '32px',
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
@@ -53,18 +53,18 @@ const WeatherHeroCard: React.FC<WeatherHeroCardProps> = ({ data, city }) => {
       <Box sx={{ position: 'relative', zIndex: 1 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <Box>
-            <Typography variant="h6" sx={{ opacity: 0.6, fontWeight: 500, fontSize: '0.8rem', letterSpacing: 2 }}>
+            <Typography variant="h6" sx={{ opacity: 0.6, fontWeight: 500, fontSize: '0.7rem', letterSpacing: 2 }}>
               CURRENT WEATHER
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'baseline', mt: 1 }}>
-              <Typography variant="h1" sx={{ fontWeight: 800, fontSize: '4.5rem', lineHeight: 1 }}>
+              <Typography variant="h1" sx={{ fontWeight: 800, fontSize: { xs: '3rem', sm: '4rem', md: '4.5rem' }, lineHeight: 1 }}>
                 {Math.round(data.temperature)}°
               </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 400, opacity: 0.3, ml: 1 }}>
+              <Typography variant="h3" sx={{ fontWeight: 400, opacity: 0.3, ml: 1, fontSize: { xs: '1.5rem', sm: '2rem' } }}>
                 C
               </Typography>
             </Box>
-            <Typography variant="h5" sx={{ mt: 1, fontWeight: 600 }}>
+            <Typography variant="h5" sx={{ mt: 1, fontWeight: 600, fontSize: { xs: '1.2rem', sm: '1.5rem' } }}>
               {condition}
             </Typography>
           </Box>
@@ -73,35 +73,35 @@ const WeatherHeroCard: React.FC<WeatherHeroCardProps> = ({ data, city }) => {
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 4, repeat: Infinity }}
           >
-            <WbSunnyIcon sx={{ fontSize: 80, color: '#00f2ff', filter: 'drop-shadow(0 0 10px rgba(0, 242, 255, 0.4))' }} />
+            <WbSunnyIcon sx={{ fontSize: { xs: 50, sm: 80 }, color: '#00f2ff', filter: 'drop-shadow(0 0 10px rgba(0, 242, 255, 0.4))' }} />
           </motion.div>
         </Box>
 
-        <Grid container spacing={3} sx={{ mt: 4 }}>
-          <Grid size={4}>
+        <Grid container spacing={2} sx={{ mt: { xs: 2, sm: 4 } }}>
+          <Grid size={{ xs: 6, sm: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <WaterDropIcon sx={{ fontSize: 18, color: '#00f2ff' }} />
               <Box>
-                <Typography variant="caption" sx={{ display: 'block', opacity: 0.4 }}>HUMIDITY</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700 }}>{data.humidity}%</Typography>
+                <Typography variant="caption" sx={{ display: 'block', opacity: 0.4, fontSize: '0.65rem' }}>HUMIDITY</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.85rem' }}>{data.humidity}%</Typography>
               </Box>
             </Box>
           </Grid>
-          <Grid size={4}>
+          <Grid size={{ xs: 6, sm: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <AirIcon sx={{ fontSize: 18, color: '#00f2ff' }} />
               <Box>
-                <Typography variant="caption" sx={{ display: 'block', opacity: 0.4 }}>WIND</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700 }}>{data.wind_speed} km/h</Typography>
+                <Typography variant="caption" sx={{ display: 'block', opacity: 0.4, fontSize: '0.65rem' }}>WIND</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.85rem' }}>{data.wind_speed} km/h</Typography>
               </Box>
             </Box>
           </Grid>
-          <Grid size={4}>
+          <Grid size={{ xs: 6, sm: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <ThermostatIcon sx={{ fontSize: 18, color: '#00f2ff' }} />
               <Box>
-                <Typography variant="caption" sx={{ display: 'block', opacity: 0.4 }}>PRESSURE</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700 }}>{data.pressure} mb</Typography>
+                <Typography variant="caption" sx={{ display: 'block', opacity: 0.4, fontSize: '0.65rem' }}>PRESSURE</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.85rem' }}>{data.pressure} mb</Typography>
               </Box>
             </Box>
           </Grid>

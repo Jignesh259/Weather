@@ -27,14 +27,14 @@ const AQIWidget: React.FC<AQIWidgetProps> = ({ data }) => {
       className="glass-card"
       style={{
         borderRadius: '24px',
-        padding: '32px',
+        padding: window.innerWidth < 640 ? '20px' : '32px', // Dynamic padding for mobile
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         border: '1px solid rgba(0, 242, 255, 0.1)',
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 2, sm: 4 }, flexWrap: 'wrap', gap: 1 }}>
         <Typography variant="h6" sx={{ opacity: 0.6, fontWeight: 500, fontSize: '0.8rem', letterSpacing: 2 }}>
           AIR QUALITY INDEX
         </Typography>
@@ -57,11 +57,11 @@ const AQIWidget: React.FC<AQIWidgetProps> = ({ data }) => {
         </Box>
       </Box>
 
-      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 2, mb: 2 }}>
-        <Typography variant="h2" sx={{ fontWeight: 800, fontSize: '4rem', lineHeight: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2, mb: 1, flexWrap: 'wrap' }}>
+        <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: '3rem', sm: '4rem' }, lineHeight: 1 }}>
           {data.aqi}
         </Typography>
-        <Typography variant="h5" sx={{ fontWeight: 600, color: data.color }}>
+        <Typography variant="h5" sx={{ fontWeight: 600, color: data.color, mb: 0.5, fontSize: { xs: '1rem', sm: '1.5rem' } }}>
           {data.category}
         </Typography>
       </Box>

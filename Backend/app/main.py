@@ -43,8 +43,9 @@ async def lifespan(app: FastAPI):
     logger.info("🌤️  Weather Forecast API — Starting up")
     logger.info("=" * 60)
 
-    # 1. Generate 45 days data + train all models
-    await weather_service.initialize()
+    # 1. Start background initialization (non-blocking)
+    import asyncio
+    asyncio.create_task(weather_service.initialize())
 
     # 2. Schedule daily retrain at midnight (00:00)
     scheduler.add_job(

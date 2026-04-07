@@ -9,7 +9,7 @@ from typing import List
 
 class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = 19220
     CORS_ORIGINS: List[str] = ["*"]
     MODEL_CACHE_TTL: int = 86400        # 24 hours
     AQI_UPDATE_INTERVAL: int = 300      # 5 minutes

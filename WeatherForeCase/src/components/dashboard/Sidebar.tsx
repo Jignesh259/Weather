@@ -6,6 +6,7 @@ import OpacityIcon from '@mui/icons-material/OpacityRounded';
 import AirIcon from '@mui/icons-material/AirRounded';
 import CloudIcon from '@mui/icons-material/CloudRounded';
 import BarChartIcon from '@mui/icons-material/BarChartRounded';
+import LocationCityIcon from '@mui/icons-material/LocationCityRounded';
 
 interface SidebarProps {
   onBack?: () => void;
@@ -47,6 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onBack, activeTab, onTabChange }) => 
     { icon: <OpacityIcon />, label: 'Precipitation', id: 'precipitation' },
     { icon: <AirIcon />, label: 'Wind Speed', id: 'wind' },
     { icon: <CloudIcon />, label: 'Air Quality', id: 'aqi' },
+    { icon: <LocationCityIcon />, label: 'All Cities', id: 'cities' },
     { icon: <BarChartIcon />, label: 'Statistics', id: 'stats' },
   ];
 
@@ -54,21 +56,27 @@ const Sidebar: React.FC<SidebarProps> = ({ onBack, activeTab, onTabChange }) => 
     <Box
       className="sidebar-gradient"
       sx={{
-        width: 80,
-        height: '100vh',
+        width: { xs: '100%', sm: 80 },
+        height: { xs: '70px', sm: '100vh' },
         position: 'fixed',
         left: 0,
-        top: 0,
+        bottom: { xs: 0, sm: 'auto' },
+        top: { xs: 'auto', sm: 0 },
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: { xs: 'row', sm: 'column' },
         alignItems: 'center',
-        py: 4,
-        borderRight: '1px solid rgba(255, 255, 255, 0.05)',
+        justifyContent: { xs: 'space-around', sm: 'flex-start' },
+        py: { xs: 0, sm: 4 },
+        px: { xs: 2, sm: 0 },
+        borderRight: { xs: 'none', sm: '1px solid rgba(255, 255, 255, 0.05)' },
+        borderTop: { xs: '1px solid rgba(255, 255, 255, 0.05)', sm: 'none' },
         zIndex: 1000,
+        backgroundColor: { xs: 'rgba(10, 15, 26, 0.95)', sm: 'transparent' },
+        backdropFilter: { xs: 'blur(20px)', sm: 'none' }
       }}
     >
-      {/* Logo Area */}
-      <Box sx={{ mb: 6 }}>
+      {/* Logo Area (Hidden on mobile bottom bar) */}
+      <Box sx={{ mb: { xs: 0, sm: 6 }, display: { xs: 'none', sm: 'block' } }}>
         <motion.div
           animate={{ rotate: [0, 10, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -94,22 +102,27 @@ const Sidebar: React.FC<SidebarProps> = ({ onBack, activeTab, onTabChange }) => 
         </motion.div>
       </Box>
 
-      {/* Main Nav */}
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ 
+        flexGrow: { xs: 1, sm: 0 }, 
+        display: 'flex', 
+        flexDirection: { xs: 'row', sm: 'column' },
+        justifyContent: 'center',
+        width: '100%',
+        gap: { xs: 1, sm: 0 }
+      }}>
         {menuItems.map((item) => (
           <SidebarItem 
             key={item.id}
-            icon={item.icon} 
+            icon={
+              <Box sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' }, display: 'flex' }}>
+                {item.icon}
+              </Box>
+            } 
             label={item.label} 
             active={activeTab === item.id} 
             onClick={() => onTabChange(item.id)}
           />
         ))}
-      </Box>
-
-      {/* Bottom Nav (Settings removed) */}
-      <Box>
-        {/* You can add a help icon or something else if needed */}
       </Box>
     </Box>
   );

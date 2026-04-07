@@ -11,7 +11,7 @@ const BentoGrid: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Feature 1: ML Predictions */}
-          <motion.div 
+          <motion.div
             whileHover={{ scale: 1.01 }}
             className="md:col-span-8 group relative overflow-hidden glass-card rounded-2xl p-8 transition-all duration-500 hover:bg-surface-container-high/80"
           >
@@ -33,7 +33,7 @@ const BentoGrid: React.FC = () => {
           </motion.div>
 
           {/* Feature 2: Real-time AQI */}
-          <motion.div 
+          <motion.div
             whileHover={{ y: -4 }}
             className="md:col-span-4 glass-card rounded-2xl p-8 flex flex-col justify-between group transition-all duration-300 border-l border-primary-container/20"
           >
@@ -47,13 +47,13 @@ const BentoGrid: React.FC = () => {
           </motion.div>
 
           {/* Feature 3: Coverage */}
-          <motion.div 
+          <motion.div
             whileHover={{ y: -4 }}
             className="md:col-span-4 glass-card rounded-2xl p-8 flex flex-col justify-between group transition-all duration-300 border-b border-secondary-container/20"
           >
             <span className="material-symbols-outlined text-primary-container text-4xl mb-8">grid_view</span>
             <div>
-              <h4 className="font-headline text-xl font-bold mb-3 text-white">36 District Coverage</h4>
+              <h4 className="font-headline text-xl font-bold mb-3 text-white">35 District Coverage</h4>
               <p className="text-on-surface/60 text-sm leading-relaxed">
                 Full-spectrum satellite synchronization across all regional zones, providing redundant sensor data for 100% uptime.
               </p>
@@ -61,14 +61,14 @@ const BentoGrid: React.FC = () => {
           </motion.div>
 
           {/* Feature 4: Atmospheric Rendering */}
-          <motion.div 
+          <motion.div
             whileHover={{ scale: 1.01 }}
             className="md:col-span-8 glass-card rounded-2xl overflow-hidden relative group"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent z-10"></div>
-            <img 
-              className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-1000" 
-              src="https://images.unsplash.com/photo-1534088568595-a066f7104211?auto=format&fit=crop&q=80" 
+            <img
+              className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-1000"
+              src="https://images.unsplash.com/photo-1534088568595-a066f7104211?auto=format&fit=crop&q=80"
               alt="Data visualization"
             />
             <div className="relative z-20 p-8 h-full flex flex-col justify-end">

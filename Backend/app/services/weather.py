@@ -35,20 +35,25 @@ class WeatherService:
         # city → date of last appended data
         self.last_data_date: Dict[str, datetime] = {}
         self.initialized: bool = False
+        self.initialization_progress: int = 0
+        self.total_cities: int = len(GUJARAT_CITIES)
 
     # ─── Startup ────────────────────────────────────────────
 
     async def initialize(self):
-        """Generate initial data and train all models (called once at startup)."""
+        """Generate initial data and train all models (non-blocking)."""
         logger.info(
             "🌤️  Initializing weather service for %d cities …",
-            len(GUJARAT_CITIES),
+            self.total_cities,
         )
 
-        for city in get_city_names():
+        import asyncio
+
+        city_names = get_city_names()
+        for idx, city in enumerate(city_names):
             try:
-                # 1. Generate 45 days of hourly data
-                df = generate_initial_data(city, days=45)
+                # 1. Generate 14 days of hourly data (Reduced for faster dev)
+                df = generate_initial_data(city, days=14)
                 self.historical_data[city] = df
                 self.last_data_date[city] = datetime.now().replace(
                     hour=0, minute=0, second=0, microsecond=0
@@ -63,11 +68,20 @@ class WeatherService:
                 self.predictions_cache[city] = model.predict(hours=168)
 
                 logger.info(
-                    "  ✅ %s — RMSE: temp=%.2f  aqi=%.2f",
+                    "  ✅ [%2d/%2d] %s — RMSE: temp=%.2f  aqi=%.2f",
+                    idx + 1,
+                    self.total_cities,
                     city,
                     metrics["temperature"],
                     metrics["aqi"],
                 )
+                
+                # Update progress
+                self.initialization_progress = idx + 1
+                
+                # Yield to event loop to prevent blocking the entire server
+                await asyncio.sleep(0.01)
+
             except Exception as e:
                 logger.error("  ❌ %s failed: %s", city, e)
 
@@ -196,6 +210,8 @@ class WeatherService:
     def get_status(self) -> dict:
         return {
             "initialized": self.initialized,
+            "progress": f"{self.initialization_progress}/{self.total_cities}",
+            "percent_complete": round((self.initialization_progress / self.total_cities) * 100, 1),
             "cities_loaded": len(self.historical_data),
             "models_trained": len(self.models),
             "cities": get_city_names(),

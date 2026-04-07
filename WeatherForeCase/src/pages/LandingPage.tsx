@@ -8,12 +8,13 @@ import { motion } from 'framer-motion';
 
 interface LandingPageProps {
   onExplore: () => void;
+  onSatellite: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onExplore }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onExplore, onSatellite }) => {
   return (
     <div className="bg-surface-dim min-h-screen text-on-surface">
-      <Navbar onExplore={onExplore} />
+      <Navbar onExplore={onExplore} onSatellite={onSatellite} />
       <Hero onStart={onExplore} />
 
       <motion.div

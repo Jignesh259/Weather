@@ -48,6 +48,11 @@ async def predict(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except RuntimeError as e:
+        if not weather_service.initialized:
+            raise HTTPException(
+                status_code=503,
+                detail=f"Service is still initializing for {city}. {weather_service.get_status()['progress']} cities ready."
+            )
         raise HTTPException(status_code=404, detail=str(e))
 
 
@@ -91,6 +96,11 @@ async def historical_data(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except RuntimeError as e:
+        if not weather_service.initialized:
+            raise HTTPException(
+                status_code=503,
+                detail=f"Historical data for {city} is not yet available as service is still initializing."
+            )
         raise HTTPException(status_code=404, detail=str(e))
 
 
