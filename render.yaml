@@ -1,0 +1,32 @@
+services:
+  # ------------------------------------------------------------------
+  # Backend: FastAPI + ML Models
+  # ------------------------------------------------------------------
+  - type: web
+    name: weather-backend
+    runtime: python
+    buildCommand: "cd Backend && pip install -r requirements.txt"
+    startCommand: "cd Backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGINS
+        value: '["*"]'
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  # ------------------------------------------------------------------
+  # Frontend: Weather Dashboard (Static Site)
+  # ------------------------------------------------------------------
+  - type: static
+    name: weather-frontend
+    runtime: node
+    buildCommand: "cd WeatherForeCase && npm install && npm run build"
+    publishPath: "WeatherForeCase/dist"
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: weather-backend
+          property: host
+        suffix: "/api"

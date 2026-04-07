@@ -38,15 +38,15 @@ class AQILiveService:
     """Manages live AQI simulation for all Gujarat cities."""
 
     def __init__(self):
-        self.current_aqi: Dict[str, int] = {}
+        self.current_aqi: Dict[str, float] = {}
         self.last_updated: Optional[datetime] = None
         self._initialize()
 
     def _initialize(self):
         """Seed initial AQI values from city base profiles."""
         for city, profile in GUJARAT_CITIES.items():
-            noise = int(np.random.normal(0, 10))
-            self.current_aqi[city] = max(10, profile["base_aqi"] + noise)
+            noise = float(np.random.normal(0, 10))
+            self.current_aqi[city] = round(float(max(10, profile["base_aqi"] + noise)), 1)
         self.last_updated = datetime.now()
         logger.info("📊 AQI service initialized for %d cities", len(self.current_aqi))
 
@@ -61,7 +61,7 @@ class AQILiveService:
 
             drift = 0.1 * (base - current)       # pull toward baseline
             noise = np.random.normal(0, 8)
-            self.current_aqi[city] = int(np.clip(current + drift + noise, 10, 500))
+            self.current_aqi[city] = round(float(np.clip(current + drift + noise, 10, 500)), 1)
 
         self.last_updated = datetime.now()
         logger.debug("📊 AQI updated at %s", self.last_updated.isoformat())

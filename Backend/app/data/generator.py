@@ -83,7 +83,8 @@ def generate_hourly_data(
         aqi_diurnal = 20 * (np.sin(2 * np.pi * (hour - 2) / 12) ** 2)
         aqi_seasonal = 15 * np.cos(2 * np.pi * (doy - 350) / 365)
         aqi = round(
-            max(10, profile["base_aqi"] + aqi_diurnal + aqi_seasonal + np.random.normal(0, 10))
+            max(10, profile["base_aqi"] + aqi_diurnal + aqi_seasonal + np.random.normal(0, 10)),
+            1
         )
 
         # ── Day / Night flag ────────────────────────────────
