@@ -95,7 +95,13 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
           <Grid container spacing={4}>
             {/* Top Row: Weather Hero & AQI */}
             <Grid size={{ xs: 12, md: 8 }}>
-              <WeatherHeroCard data={predictions[0]} city={selectedCity} />
+              {predictions && predictions.length > 0 ? (
+                <WeatherHeroCard data={predictions[0]} city={selectedCity} />
+              ) : (
+                <Box sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: '32px', textAlign: 'center' }}>
+                  <Typography variant="body2" sx={{ opacity: 0.5 }}>No prediction data available for {selectedCity}.</Typography>
+                </Box>
+              )}
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
               <AQIWidget data={aqi} />
@@ -103,7 +109,9 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
 
             {/* Middle Row: Forecast */}
             <Grid size={12}>
-              <ForecastGrid data={predictions} />
+              {predictions && predictions.length > 0 ? (
+                <ForecastGrid data={predictions} />
+              ) : null}
             </Grid>
 
             {/* Bottom Row: Charts & Extra Metrics */}
@@ -152,55 +160,55 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onBack }) => {
         );
       case 'precipitation':
         return (
-          <WeatherCharts 
-            data={predictions} 
-            dataKey="humidity" 
-            color="#00f2ff" 
-            unit="%" 
+          <WeatherCharts
+            data={predictions}
+            dataKey="humidity"
+            color="#00f2ff"
+            unit="%"
             loading={loading}
           />
         );
       case 'wind':
         return (
-          <WeatherCharts 
-            data={predictions} 
-            dataKey="wind_speed" 
-            color="#fff" 
-            unit=" km/h" 
+          <WeatherCharts
+            data={predictions}
+            dataKey="wind_speed"
+            color="#fff"
+            unit=" km/h"
             loading={loading}
           />
         );
       case 'aqi':
         return (
-          <WeatherCharts 
-            data={predictions} 
-            dataKey="aqi" 
-            color="#ce5dff" 
-            unit=" AQI" 
+          <WeatherCharts
+            data={predictions}
+            dataKey="aqi"
+            color="#ce5dff"
+            unit=" AQI"
             loading={loading}
           />
         );
-    case 'stats':
-      return (
-        <WeatherCharts 
-          data={predictions} 
-          dataKey="temperature" 
-          color="#00f2ff" 
-          loading={loading}
-        />
-      );
-    case 'cities':
-      return (
-        <CitySelectorList 
-          cities={cities} 
-          allAQI={allAQI} 
-          selectedCity={selectedCity}
-          onSelect={(city) => {
-            setSelectedCity(city);
-            setActiveTab('dashboard');
-          }}
-        />
-      );
+      case 'stats':
+        return (
+          <WeatherCharts
+            data={predictions}
+            dataKey="temperature"
+            color="#00f2ff"
+            loading={loading}
+          />
+        );
+      case 'cities':
+        return (
+          <CitySelectorList
+            cities={cities}
+            allAQI={allAQI}
+            selectedCity={selectedCity}
+            onSelect={(city) => {
+              setSelectedCity(city);
+              setActiveTab('dashboard');
+            }}
+          />
+        );
       default:
         return null;
     }
