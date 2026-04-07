@@ -146,8 +146,12 @@ const WeatherCharts: React.FC<WeatherChartsProps> = ({
       <Box sx={{ flexGrow: 1, width: '100%', minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {showLoading ? (
           <Box sx={{ textAlign: 'center' }}>
-            <CircularProgress size={30} sx={{ color: color, mb: 2 }} />
-            <Typography variant="body2" sx={{ opacity: 0.3 }}>Sythesizing prediction data...</Typography>
+            {loading ? (
+              <CircularProgress size={30} sx={{ color: color, mb: 2 }} />
+            ) : null}
+            <Typography variant="body2" sx={{ opacity: 0.3 }}>
+              {loading ? "Synthesizing prediction data..." : "Awaiting data update..."}
+            </Typography>
           </Box>
         ) : (
           <ResponsiveContainer width="100%" height={350}>
